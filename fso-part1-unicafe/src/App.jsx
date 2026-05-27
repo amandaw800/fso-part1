@@ -3,22 +3,47 @@ import {useState} from 'react'
 
 const Statistics = ({goodCount, badCount, neutralCount}) => {
   const total = goodCount + badCount + neutralCount
-  
+  const calculateAvgScore = () => total ? (goodCount - badCount) / total : 0
+  const positivePercent = () => total ? goodCount / total : 0
 
-  const calculateAvgScore = () => total ? (goodCount - badCount) / total : 0;
+  if(total === 0){
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
 
   return (
     <div>
-      <div>
-        all {total}
-      </div>
-      <div>
-        average {calculateAvgScore()}
-      </div>
-      
+      <StatisticLine text="good" value={goodCount}/>
+      <StatisticLine text="neutral" value={neutralCount}/>
+      <StatisticLine text="bad" value={badCount}/>
+      <StatisticLine text="all" value={total}/>
+      <StatisticLine text="average" value={calculateAvgScore()}/>
+      <StatisticLine text="positive" value={positivePercent()}/>
+    
     </div>
   )
-  
+    
+}
+
+const StatisticLine = ({text, value}) => {
+
+  if(text === "positive"){
+    return (
+      <div>
+        {text} {value} %
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {text} {value}
+
+    </div>
+  )
 
 }
 
@@ -41,15 +66,7 @@ const App = () => {
       <Button onClick={handleBad} text="bad"/>
       
       <h2>Statistics</h2>
-      <div>
-      good {good} 
-      </div>
-      <div>
-        neutral {neutral}
-      </div>
-      <div>
-         bad {bad}
-      </div>
+
 
       <Statistics goodCount={good} badCount={bad} neutralCount={neutral}/>
     </div>
