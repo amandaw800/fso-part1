@@ -36,17 +36,33 @@ const App = () => {
 
   const randomlyPickAncedote = (anecdotes) => Math.floor(Math.random() * anecdotes.length)
 
+  const incrementVote = (select) => {
+    const copy = { ...count}
+
+    copy[select] += 1  
+    
+    return copy
+  }
+
   const [selected, setSelected] = useState(randomlyPickAncedote(anecdotes))
   const [vote, setVote] = useState(0)
   const [count, setCount] = useState({0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0})
 
   const handleAncedoteRandomization = () => {
     setSelected(randomlyPickAncedote(anecdotes))
-    setVote(0)
+
   }
 
   const handleVotes = () => {
     setVote(vote+1)
+
+    setCount(prev => {
+    const copy = { ...prev }
+    copy[selected] += 1
+    return copy
+})
+
+    
   }
 
 
@@ -55,7 +71,7 @@ const App = () => {
     <div>
        {anecdotes[selected]}
 
-        <Vote totalVotes={vote}/>
+        <Vote totalVotes={count[selected]}/>
 
    
        
