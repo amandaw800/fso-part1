@@ -36,15 +36,8 @@ const App = () => {
 
   const randomlyPickAncedote = (anecdotes) => Math.floor(Math.random() * anecdotes.length)
 
-  const incrementVote = (select) => {
-    const copy = { ...count}
-
-    copy[select] += 1  
-    
-    return copy
-  }
-
-  const [selected, setSelected] = useState(randomlyPickAncedote(anecdotes))
+  //Index of the selected value
+  const [selected, setSelected] = useState(randomlyPickAncedote(anecdotes)) 
   const [vote, setVote] = useState(0)
   const [count, setCount] = useState({0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0})
 
@@ -54,32 +47,43 @@ const App = () => {
   }
 
   const handleVotes = () => {
-    setVote(vote+1)
+    setVote(vote => vote+1)
+    setCount((prevCount) =>{
+      const copy = {...prevCount}
+      copy[selected] += 1
+      return copy
+    })
 
-    setCount(prev => {
-    const copy = { ...prev }
-    copy[selected] += 1
-    return copy
-})
-
-    
   }
+
 
 
 
   return (
     <div>
+      <h1>
+        Anecdote of the day
+      </h1>
        {anecdotes[selected]}
 
         <Vote totalVotes={count[selected]}/>
-
-   
-       
        
        <div>
        <Button onClick={handleAncedoteRandomization} name="next ancedote"/>
        <Button onClick={handleVotes} name="vote"/>
         </div>
+
+
+      <h1>
+        Anecdote with most votes
+      </h1>
+
+      <div>
+        {anecdotes[Object.keys(count).reduce((a,b) => count[a] > count[b] ? a : b)]}
+
+        <Vote totalVotes={count[Object.keys(count).reduce((a,b) => count[a] > count[b] ? a : b)]}/>
+
+      </div>
      
     </div>
   )
